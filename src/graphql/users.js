@@ -11,27 +11,26 @@ const resolvers = {
       const { orm } = context;
       return orm.user.findByPk(args.id);
     },
+
+    loggedInUser: async (root, args, { user }) => {
+      return user;
+    },
   },
   Mutation: {
-    createUser: async (root, args, context) => {
-      const { orm } = context;
-      const { input } = args;
+    createUser: async (root, { input }, { orm }) => {
       return orm.user.create(input);
     },
 
-    editUser: async (root, args, context) => {
-      const { orm } = context;
-      const { input } = args;
-      const user = await orm.user.findByPk(input.id);
-      return user.update(input);
+    editUser: async (root, { input }, { orm, user }) => {
+      const userToEdit = await orm.user.findByPk(input.id);
+      if (!user || !userToEdit || user.id !== userToEdit.id) return null;
+      return userToEdit.update(input);
     },
 
-    deleteUser: async (root, args, context) => {
-      const { orm } = context;
-      const { input } = args;
-      const user = await orm.user.findByPk(input.id);
-      user.destroy();
-      return user;
+    deleteUser: async (root, { input }, { orm, user }) => {
+      const userToDestroy = await orm.user.findByPk(input.id);
+      if (!user || !userToDestroy || user.id !== userToDestroy.id) return null;
+      return userToDestroy.destroy();
     },
   },
 };
@@ -46,6 +45,7 @@ const typeDef = gql`
   extend type Query {
     users: [User]
     user(id: Int!, name: String, email: String, password: String): User
+    loggedInUser: User
   }
 
   input CreateUserInput {
@@ -53,15 +53,15 @@ const typeDef = gql`
     password: String!
   }
 
-  input IdUserInput {
+  input UserInput {
     email: String
     password: String
   }
 
   extend type Mutation {
     createUser(input: CreateUserInput!): User!
-    editUser(input: IdUserInput!): User!
-    deleteUser(input: IdUserInput!): User!
+    editUser(input: UserInput!): User!
+    deleteUser(input: UserInput!): User!
   }
 `;
 
