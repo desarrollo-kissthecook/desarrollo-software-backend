@@ -3,6 +3,7 @@ const jwtgenerator = require('jsonwebtoken');
 const { ApolloServer, gql } = require('apollo-server-koa');
 const orm = require('./models');
 const session = require('./graphql/session');
+const chef = require('./graphql/chefs');
 
 const users = require('./graphql/users');
 
@@ -12,8 +13,8 @@ const typeDef = gql`
 `;
 
 const server = new ApolloServer({
-  typeDefs: [typeDef, session.typeDef, users.typeDef],
-  resolvers: merge(session.resolvers, users.resolvers),
+  typeDefs: [typeDef, session.typeDef, users.typeDef, chef.typeDef],
+  resolvers: merge(session.resolvers, users.resolvers, chef.resolvers),
   playground: true,
   introspection: true,
   context: async ({ ctx }) => {
