@@ -1,23 +1,27 @@
+const bcrypt = require('bcrypt');
+
 module.exports = {
-  up: queryInterface =>
-    queryInterface.bulkInsert(
+  up: async queryInterface => {
+    const password = await bcrypt.hash('123456', 10);
+    return queryInterface.bulkInsert(
       'users',
       [
         {
           email: 'test@uc.cl',
-          password: '123456',
+          password,
         },
         {
           email: 'prueba@uc.cl',
-          password: '123456',
+          password,
         },
         {
           email: 'teste@uc.cl',
-          password: '123456',
+          password,
         },
       ],
       {}
-    ),
+    );
+  },
 
   down: queryInterface => queryInterface.bulkDelete('users', null, {}),
 };
