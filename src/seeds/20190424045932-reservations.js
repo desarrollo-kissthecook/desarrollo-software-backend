@@ -5,6 +5,7 @@ module.exports = {
       [
         {
           clientId: 1,
+          dishId: 1,
           comment: 'Quiero la carne cruda',
         },
       ],

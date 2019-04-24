@@ -7,6 +7,7 @@ const chef = require('./graphql/chefs');
 const client = require('./graphql/clients');
 const users = require('./graphql/users');
 const reservation = require('./graphql/reservations');
+const dish = require('./graphql/dishes');
 
 const typeDef = gql`
   type Query
@@ -21,13 +22,15 @@ const server = new ApolloServer({
     chef.typeDef,
     client.typeDef,
     reservation.typeDef,
+    dish.typeDef,
   ],
   resolvers: merge(
     session.resolvers,
     users.resolvers,
     chef.resolvers,
     client.resolvers,
-    reservation.resolvers
+    reservation.resolvers,
+    dish.resolvers
   ),
   playground: true,
   introspection: true,

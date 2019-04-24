@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   chef.associate = models => {
     chef.belongsTo(models.user, { through: 'userId' });
+    chef.hasMany(models.dish, { onDelete: 'cascade' });
   };
   return chef;
 };
