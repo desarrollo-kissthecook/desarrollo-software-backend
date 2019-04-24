@@ -4,7 +4,7 @@ const { ApolloServer, gql } = require('apollo-server-koa');
 const orm = require('./models');
 const session = require('./graphql/session');
 const chef = require('./graphql/chefs');
-
+const client = require('./graphql/clients');
 const users = require('./graphql/users');
 
 const typeDef = gql`
@@ -13,8 +13,19 @@ const typeDef = gql`
 `;
 
 const server = new ApolloServer({
-  typeDefs: [typeDef, session.typeDef, users.typeDef, chef.typeDef],
-  resolvers: merge(session.resolvers, users.resolvers, chef.resolvers),
+  typeDefs: [
+    typeDef,
+    session.typeDef,
+    users.typeDef,
+    chef.typeDef,
+    client.typeDef,
+  ],
+  resolvers: merge(
+    session.resolvers,
+    users.resolvers,
+    chef.resolvers,
+    client.resolvers
+  ),
   playground: true,
   introspection: true,
   context: async ({ ctx }) => {

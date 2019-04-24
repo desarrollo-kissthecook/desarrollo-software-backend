@@ -43,7 +43,7 @@ const typeDef = gql`
     id: ID!
     email: String
     password: String
-    chef: Chef
+    chef: Chef!
   }
 
   extend type Query {

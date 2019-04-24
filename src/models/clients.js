@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const chef = sequelize.define(
-    'chef',
+  const client = sequelize.define(
+    'client',
     {
       userId: {
         type: DataTypes.INTEGER,
@@ -9,15 +9,15 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
-      description: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: true,
         },
       },
-      address: {
-        type: DataTypes.STRING,
+      age: {
+        type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
           notEmpty: true,
@@ -26,8 +26,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  chef.associate = models => {
-    chef.belongsTo(models.user, { through: 'userId' });
+  client.associate = models => {
+    client.belongsTo(models.user, { through: 'userId' });
   };
-  return chef;
+  return client;
 };
