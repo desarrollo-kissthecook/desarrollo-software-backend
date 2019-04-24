@@ -3,6 +3,7 @@ const { gql } = require('apollo-server');
 const resolvers = {
   Reservation: {
     client: (root, args, context) => root.getClient(),
+    dish: (root, args, context) => root.getDish(),
   },
   Query: {
     reservations: (root, args, context) => {
@@ -44,6 +45,7 @@ const typeDef = gql`
     id: ID!
     client: Client!
     comment: String!
+    dish: Dish!
   }
 
   extend type Query {
