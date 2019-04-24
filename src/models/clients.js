@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   client.associate = models => {
     client.belongsTo(models.user, { through: 'userId' });
+    client.hasMany(models.reservation, { onDelete: 'cascade' });
   };
   return client;
 };
