@@ -21,8 +21,8 @@ module.exports = (sequelize, DataTypes) => {
   user.beforeUpdate(buildPasswordHash);
   user.beforeCreate(buildPasswordHash);
 
-  user.associate = function() {
-    // associations can be defined here
+  user.associate = models => {
+    user.hasOne(models.chef, { onDelete: 'cascade' });
   };
 
   user.prototype.checkPassword = function(password) {
