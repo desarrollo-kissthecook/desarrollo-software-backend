@@ -1,6 +1,10 @@
 const { gql } = require('apollo-server');
 
 const resolvers = {
+  User: {
+    chef: (root, args, context) => root.getChef(),
+    client: (root, args, context) => root.getClient(),
+  },
   Query: {
     users: (root, args, context) => {
       const { orm } = context;
@@ -40,6 +44,8 @@ const typeDef = gql`
     id: ID!
     email: String
     password: String
+    chef: Chef
+    client: Client
   }
 
   extend type Query {
