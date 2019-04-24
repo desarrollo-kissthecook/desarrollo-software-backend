@@ -46,25 +46,21 @@ const typeDef = gql`
     description: String
     address: String
   }
-
   extend type Query {
     chefs: [Chef]
     chef(id: Int!, userID: ID, description: String, address: String): Chef
   }
-
   input CreateChefInput {
     userId: ID!
     description: String!
     address: String!
   }
-
   input ChefInput {
     id: Int!
     userId: ID
     description: String
     address: String
   }
-
   extend type Mutation {
     createChef(input: CreateChefInput!): Chef!
     editChef(input: ChefInput!): Chef!
