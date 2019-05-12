@@ -3,6 +3,7 @@ const { gql } = require('apollo-server');
 const resolvers = {
   Chef: {
     user: (root, args, context) => root.getUser(),
+    dishes: (root, args, context) => root.getDishes(),
   },
   Query: {
     chefs: (root, args, context) => {
@@ -36,6 +37,12 @@ const resolvers = {
       chef.destroy();
       return chef;
     },
+    createChefUser: async (root, args, context) => {
+      const { orm } = context;
+      const { input } = args;
+      const userCreated = await orm.user.create(input);
+      return userCreated.createChef(input);
+    },
   },
 };
 
@@ -45,6 +52,7 @@ const typeDef = gql`
     user: User!
     description: String
     address: String
+    dishes: [Dish!]
   }
   extend type Query {
     chefs: [Chef]
@@ -61,10 +69,17 @@ const typeDef = gql`
     description: String
     address: String
   }
+  input CreateChefUserInput {
+    email: String!
+    password: String!
+    description: String!
+    address: String!
+  }
   extend type Mutation {
     createChef(input: CreateChefInput!): Chef!
     editChef(input: ChefInput!): Chef!
     deleteChef(input: ChefInput!): Chef!
+    CreateChefUser(input: CreateChefUserInput!): Chef!
   }
 `;
 
