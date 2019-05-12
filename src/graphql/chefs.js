@@ -37,6 +37,12 @@ const resolvers = {
       chef.destroy();
       return chef;
     },
+    createChefUser: async (root, args, context) => {
+      const { orm } = context;
+      const { input } = args;
+      const userCreated = await orm.user.create(input);
+      return userCreated.createChef(input);
+    },
   },
 };
 
@@ -63,10 +69,17 @@ const typeDef = gql`
     description: String
     address: String
   }
+  input CreateChefUserInput {
+    email: String!
+    password: String!
+    description: String!
+    address: String!
+  }
   extend type Mutation {
     createChef(input: CreateChefInput!): Chef!
     editChef(input: ChefInput!): Chef!
     deleteChef(input: ChefInput!): Chef!
+    CreateChefUser(input: CreateChefUserInput!): Chef!
   }
 `;
 
