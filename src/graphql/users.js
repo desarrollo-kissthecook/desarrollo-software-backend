@@ -16,7 +16,7 @@ const resolvers = {
       return orm.user.findByPk(args.id);
     },
 
-    loggedInUser: async (root, args, { user }) => {
+    getUser: async (root, args, { user }) => {
       return user;
     },
   },
@@ -51,7 +51,7 @@ const typeDef = gql`
   extend type Query {
     users: [User]
     user(id: Int!, name: String, email: String, password: String): User
-    loggedInUser: User
+    getUser: User
   }
 
   input CreateUserInput {
