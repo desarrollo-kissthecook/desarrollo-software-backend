@@ -79,7 +79,7 @@ const typeDef = gql`
     createChef(input: CreateChefInput!): Chef!
     editChef(input: ChefInput!): Chef!
     deleteChef(input: ChefInput!): Chef!
-    CreateChefUser(input: CreateChefUserInput!): Chef!
+    createChefUser(input: CreateChefUserInput!): Chef!
   }
 `;
 
