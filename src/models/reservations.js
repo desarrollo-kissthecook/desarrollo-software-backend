@@ -18,10 +18,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       comment: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
       },
     },
     {}
