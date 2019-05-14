@@ -37,6 +37,12 @@ const resolvers = {
       client.destroy();
       return client;
     },
+    createClientUser: async (root, args, context) => {
+      const { orm } = context;
+      const { input } = args;
+      const userCreated = await orm.user.create(input);
+      return userCreated.createClient(input);
+    },
   },
 };
 
@@ -66,11 +72,18 @@ const typeDef = gql`
     name: String
     age: Int
   }
+  input CreateClientUserInput {
+    email: String!
+    password: String!
+    name: String!
+    age: Int!
+  }
 
   extend type Mutation {
     createClient(input: CreateClientInput!): Client!
     editClient(input: ClientInput!): Client!
     deleteClient(input: ClientInput!): Client!
+    createClientUser(input: CreateClientUserInput!): Client!
   }
 `;
 
