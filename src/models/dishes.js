@@ -16,6 +16,18 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
+      price: {
+        type: DataTypes.INTEGER,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      name: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+        },
+      },
     },
     {}
   );
