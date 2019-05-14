@@ -17,9 +17,11 @@ const resolvers = {
   },
   Mutation: {
     createDish: async (root, args, context) => {
-      const { orm } = context;
+      const { user } = context;
       const { input } = args;
-      return orm.dish.create(input);
+      if (!user) return null;
+      const chef = await user.getChef();
+      return chef.createDish(input);
     },
 
     editDish: async (root, args, context) => {
@@ -52,7 +54,6 @@ const typeDef = gql`
     dish(id: Int!, chefID: ID, description: String): Dish
   }
   input CreateDishInput {
-    chefId: ID!
     description: String!
     name: String!
     price: Int!
