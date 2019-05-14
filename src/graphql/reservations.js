@@ -17,10 +17,10 @@ const resolvers = {
     },
   },
   Mutation: {
-    createReservation: async (root, args, context) => {
-      const { orm } = context;
-      const { input } = args;
-      return orm.reservation.create(input);
+    createReservation: async (root, { input }, { user }) => {
+      if (!user) return null;
+      const client = await user.getClient();
+      return client.createReservation(input);
     },
 
     editReservation: async (root, args, context) => {
@@ -54,9 +54,9 @@ const typeDef = gql`
   }
 
   input CreateReservationInput {
-    clientId: ID!
-    comment: String!
-    age: Int!
+    dishId: ID!
+    comment: String
+    age: Int
   }
 
   input ReservationInput {
