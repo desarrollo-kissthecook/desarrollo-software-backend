@@ -23,18 +23,16 @@ const resolvers = {
       return orm.client.create(input);
     },
 
-    editClient: async (root, args, context) => {
-      const { orm } = context;
-      const { input } = args;
-      const client = await orm.client.findByPk(input.id);
+    editClient: async (root, { input }, { user }) => {
+      if (!user) return null;
+      const client = await user.getClient();
       return client.update(input);
     },
 
-    deleteClient: async (root, args, context) => {
-      const { orm } = context;
-      const { input } = args;
-      const client = await orm.client.findByPk(input.id);
-      client.destroy();
+    deleteClient: async (root, args, { user }) => {
+      if (!user) return null;
+      const client = await user.getClient();
+      await client.destroy();
       return client;
     },
     createClientUser: async (root, args, context) => {
@@ -67,8 +65,6 @@ const typeDef = gql`
   }
 
   input ClientInput {
-    id: Int!
-    userId: ID
     name: String
     age: Int
   }
@@ -81,8 +77,8 @@ const typeDef = gql`
 
   extend type Mutation {
     createClient(input: CreateClientInput!): Client!
-    editClient(input: ClientInput!): Client!
-    deleteClient(input: ClientInput!): Client!
+    editClient(input: ClientInput!): Client
+    deleteClient: Client
     createClientUser(input: CreateClientUserInput!): Client!
   }
 `;

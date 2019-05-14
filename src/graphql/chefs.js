@@ -72,10 +72,10 @@ const typeDef = gql`
     address: String!
   }
   extend type Mutation {
-    createChef(input: CreateChefInput!): Chef!
-    editChef(input: ChefInput!): Chef!
-    deleteChef: Chef!
-    createChefUser(input: CreateChefUserInput!): Chef!
+    createChef(input: CreateChefInput!): Chef
+    editChef(input: ChefInput!): Chef
+    deleteChef: Chef
+    createChefUser(input: CreateChefUserInput!): Chef
   }
 `;
 
