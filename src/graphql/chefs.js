@@ -26,8 +26,7 @@ const resolvers = {
     editChef: async (root, { input }, { user }) => {
       if (!user) return null;
       const chef = await user.getChef();
-      await chef.update(input);
-      return chef;
+      return chef.update(input);
     },
 
     deleteChef: async (root, args, { user }) => {
