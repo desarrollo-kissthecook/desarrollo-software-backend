@@ -23,18 +23,16 @@ const resolvers = {
       return orm.chef.create(input);
     },
 
-    editChef: async (root, args, context) => {
-      const { orm } = context;
-      const { input } = args;
-      const chef = await orm.chef.findByPk(input.id);
+    editChef: async (root, { input }, { user }) => {
+      if (!user) return null;
+      const chef = await user.getChef();
       return chef.update(input);
     },
 
-    deleteChef: async (root, args, context) => {
-      const { orm } = context;
-      const { input } = args;
-      const chef = await orm.chef.findByPk(input.id);
-      chef.destroy();
+    deleteChef: async (root, args, { user }) => {
+      if (!user) return null;
+      const chef = await user.getChef();
+      await chef.destroy();
       return chef;
     },
     createChefUser: async (root, args, context) => {
@@ -64,8 +62,6 @@ const typeDef = gql`
     address: String!
   }
   input ChefInput {
-    id: Int!
-    userId: ID
     description: String
     address: String
   }
@@ -78,7 +74,7 @@ const typeDef = gql`
   extend type Mutation {
     createChef(input: CreateChefInput!): Chef!
     editChef(input: ChefInput!): Chef!
-    deleteChef(input: ChefInput!): Chef!
+    deleteChef: Chef!
     createChefUser(input: CreateChefUserInput!): Chef!
   }
 `;
