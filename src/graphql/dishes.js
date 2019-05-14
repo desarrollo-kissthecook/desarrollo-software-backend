@@ -44,6 +44,8 @@ const typeDef = gql`
     id: ID!
     chef: Chef!
     description: String
+    name: String
+    price: Int
   }
   extend type Query {
     dishes: [Dish]
@@ -52,11 +54,15 @@ const typeDef = gql`
   input CreateDishInput {
     chefId: ID!
     description: String!
+    name: String!
+    price: Int!
   }
   input DishInput {
     id: Int!
     chefId: ID
     description: String
+    name: String
+    price: Int
   }
   extend type Mutation {
     createDish(input: CreateDishInput!): Dish!
