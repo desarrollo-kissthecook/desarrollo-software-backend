@@ -26,13 +26,15 @@ const resolvers = {
     editChef: async (root, { input }, { user }) => {
       if (!user) return null;
       const chef = await user.getChef();
-      return chef.update(input);
+      await chef.update(input);
+      return chef;
     },
 
     deleteChef: async (root, args, { user }) => {
       if (!user) return null;
       const chef = await user.getChef();
-      return chef.destroy();
+      await chef.destroy();
+      return chef;
     },
     createChefUser: async (root, args, context) => {
       const { orm } = context;
