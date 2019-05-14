@@ -23,10 +23,9 @@ const resolvers = {
       return orm.chef.create(input);
     },
 
-    editChef: async (root, args, context) => {
-      const { orm } = context;
-      const { input } = args;
-      const chef = await orm.chef.findByPk(input.id);
+    editChef: async (root, { input }, { user }) => {
+      if (!user) return null;
+      const chef = await user.getChef();
       return chef.update(input);
     },
 
@@ -64,8 +63,6 @@ const typeDef = gql`
     address: String!
   }
   input ChefInput {
-    id: Int!
-    userId: ID
     description: String
     address: String
   }
