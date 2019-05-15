@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
       comment: {
         type: DataTypes.STRING,
       },
+      delivered: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {}
   );

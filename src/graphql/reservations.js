@@ -45,6 +45,7 @@ const typeDef = gql`
     id: ID!
     client: Client!
     comment: String!
+    delivered: Boolean!
     dish: Dish!
   }
 
@@ -64,6 +65,7 @@ const typeDef = gql`
     clientId: ID
     comment: String
     age: Int
+    delivered: Boolean
   }
 
   extend type Mutation {
