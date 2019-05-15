@@ -43,6 +43,7 @@ const server = new ApolloServer({
       ...ctx,
       orm,
       user,
+      ctx,
     };
   },
 });

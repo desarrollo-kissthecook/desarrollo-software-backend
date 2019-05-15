@@ -3,9 +3,11 @@ const Koa = require('koa');
 const koaBody = require('koa-body');
 const koaLogger = require('koa-logger');
 const koaStatic = require('koa-static');
+const render = require('koa-ejs');
 const override = require('koa-override-method');
 const orm = require('./models');
 const server = require('./apollo');
+const mailer = require('./mailers');
 
 // App constructor
 const app = new Koa();
@@ -36,7 +38,7 @@ app.use((ctx, next) => {
 app.use(koaLogger());
 
 app.use(koaStatic(path.join(__dirname, '..', 'build'), {}));
-
+mailer(app);
 // parse request body
 app.use(
   koaBody({
@@ -51,6 +53,11 @@ app.use((ctx, next) => {
     ctx.request.body.fields || ctx.request.body
   );
   return next();
+});
+
+render(app, {
+  root: path.join(__dirname, 'mailers'),
+  viewExt: 'html.ejs',
 });
 
 server.applyMiddleware({ app });
