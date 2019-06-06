@@ -2,8 +2,8 @@ module.exports = {
   provider: {
     service: 'SendGrid',
     auth: {
-      user: 'mapuentes@uc.cl',
-      pass: 'capstone2019',
+      user: process.env.SENDGRID_USER,
+      pass: process.env.SENDGRID_PASS,
     },
   },
   defaults: {
