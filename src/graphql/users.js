@@ -76,6 +76,7 @@ const resolvers = {
         encoding,
         url,
       };
+    },
 
     addMoney: async (root, { input }, { orm, user }) => {
       if (!user) return null;
@@ -91,7 +92,7 @@ const resolvers = {
       }
       return userToEdit.money;
     },
-      
+
     substractMoney: async (root, { input }, { orm, user }) => {
       if (!user) return null;
 
