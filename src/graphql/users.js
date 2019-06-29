@@ -36,6 +36,17 @@ const resolvers = {
       if (!user || !userToDestroy || user.id !== userToDestroy.id) return null;
       return userToDestroy.destroy();
     },
+
+    addMoney: async (root, { input }, { orm, user }) => {
+      if (!user) return null;
+
+      const userToEdit = await orm.user.findByPk(user.id);
+      if (input.money >= 0) {
+        userToEdit.money += input.money;
+        userToEdit.save();
+      }
+      return userToEdit.money;
+    },
   },
 };
 
@@ -46,6 +57,7 @@ const typeDef = gql`
     password: String
     chef: Chef
     client: Client
+    money: Int
   }
 
   extend type Query {
@@ -64,10 +76,15 @@ const typeDef = gql`
     password: String
   }
 
+  input MoneyInput {
+    money: Int
+  }
+
   extend type Mutation {
     createUser(input: CreateUserInput!): User!
     editUser(input: UserInput!): User!
     deleteUser(input: UserInput!): User!
+    addMoney(input: MoneyInput): Int
   }
 `;
 
