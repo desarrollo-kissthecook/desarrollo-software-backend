@@ -1,5 +1,6 @@
 const { gql } = require('apollo-server');
-const sendReservationEmail = require('../mailers/reservation');
+const sendReservationEmailClient = require('../mailers/reservationClient');
+const sendReservationEmailChef = require('../mailers/reservationChef');
 
 const resolvers = {
   Reservation: {
@@ -22,7 +23,10 @@ const resolvers = {
       if (!user) return null;
       const client = await user.getClient();
       const dish = await orm.dish.findByPk(input.dishId);
-      sendReservationEmail(ctx, { user, dish });
+      const chef = await orm.chef.findByPk(dish.chefId);
+      const userChef = await orm.user.findByPk(chef.userId);
+      sendReservationEmailClient(ctx, { user, dish });
+      sendReservationEmailChef(ctx, { user, userChef, dish });
       return client.createReservation(input);
     },
 
