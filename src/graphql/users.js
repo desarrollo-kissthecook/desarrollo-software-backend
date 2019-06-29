@@ -39,7 +39,7 @@ const resolvers = {
       if (!user || !userToDestroy || user.id !== userToDestroy.id) return null;
       return userToDestroy.destroy();
     },
-    
+
     async uploadUserImage(root, args, context) {
       const { user } = context;
       const file = await args.input;
@@ -76,6 +76,7 @@ const resolvers = {
         encoding,
         url,
       };
+    },
 
     addMoney: async (root, { input }, { orm, user }) => {
       if (!user) return null;
@@ -91,7 +92,7 @@ const resolvers = {
       }
       return userToEdit.money;
     },
-      
+
     substractMoney: async (root, { input }, { orm, user }) => {
       if (!user) return null;
 
