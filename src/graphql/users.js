@@ -1,4 +1,7 @@
+const fs = require('fs');
 const { gql } = require('apollo-server');
+const { processUpload, s3 } = require('../services/fileUpload');
+const amazonConfig = require('../config/amazon');
 
 const resolvers = {
   User: {
@@ -36,6 +39,43 @@ const resolvers = {
       if (!user || !userToDestroy || user.id !== userToDestroy.id) return null;
       return userToDestroy.destroy();
     },
+    async uploadImageUser(root, args, context) {
+      const { user } = context;
+      const file = await args.input;
+      const fileName = file.filename;
+      const mimeType = file.mimetype;
+      const { encoding } = file;
+      const { id, path } = await processUpload(file);
+      const myKey = id;
+      const { myBucket } = amazonConfig;
+      // eslint-disable-next-line consistent-return
+      await fs.readFile(path, (err, data) => {
+        if (err) {
+          return null;
+        }
+        const params = {
+          Bucket: myBucket,
+          Key: myKey,
+          Body: data,
+          ACL: 'public-read-write',
+        };
+        s3.putObject(params, err2 => {
+          if (err2) {
+            return null;
+          }
+          return true;
+        });
+      });
+      const url = `https://s3.us-east-2.amazonaws.com/${myBucket}/${myKey}`;
+      await fs.unlinkSync(path);
+      await user.update({ image: url });
+      return {
+        fileName,
+        mimeType,
+        encoding,
+        url,
+      };
+    },
   },
 };
 
@@ -46,6 +86,13 @@ const typeDef = gql`
     password: String
     chef: Chef
     client: Client
+  }
+
+  type file {
+    fileName: String!
+    mimeType: String!
+    encoding: String!
+    url: String
   }
 
   extend type Query {
@@ -68,6 +115,7 @@ const typeDef = gql`
     createUser(input: CreateUserInput!): User!
     editUser(input: UserInput!): User!
     deleteUser(input: UserInput!): User!
+    uploadFile(input: Upload!): file!
   }
 `;
 
