@@ -29,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
   client.associate = models => {
     client.belongsTo(models.user, { through: 'userId' });
     client.hasMany(models.reservation, { onDelete: 'cascade' });
+    client.hasMany(models.dishReview, { onDelete: 'cascade' });
   };
   return client;
 };
