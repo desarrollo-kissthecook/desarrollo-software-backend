@@ -39,7 +39,7 @@ const resolvers = {
       if (!user || !userToDestroy || user.id !== userToDestroy.id) return null;
       return userToDestroy.destroy();
     },
-    async uploadImageUser(root, args, context) {
+    async uploadUserImage(root, args, context) {
       const { user } = context;
       const file = await args.input;
       const fileName = file.filename;
@@ -115,7 +115,7 @@ const typeDef = gql`
     createUser(input: CreateUserInput!): User!
     editUser(input: UserInput!): User!
     deleteUser(input: UserInput!): User!
-    uploadFile(input: Upload!): file!
+    uploadUserImage(input: Upload!): file!
   }
 `;
 
