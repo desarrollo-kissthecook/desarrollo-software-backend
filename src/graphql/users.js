@@ -44,6 +44,10 @@ const resolvers = {
       if (input.money >= 0) {
         userToEdit.money += input.money;
         userToEdit.save();
+        await orm.moneyTransfer.create({
+          toId: user.id,
+          amount: input.money,
+        });
       }
       return userToEdit.money;
     },
