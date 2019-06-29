@@ -1,4 +1,7 @@
+const fs = require('fs');
 const { gql } = require('apollo-server');
+const { processUpload, s3 } = require('../services/fileUpload');
+const amazonConfig = require('../config/amazon');
 
 const resolvers = {
   User: {
@@ -36,6 +39,43 @@ const resolvers = {
       if (!user || !userToDestroy || user.id !== userToDestroy.id) return null;
       return userToDestroy.destroy();
     },
+    
+    async uploadUserImage(root, args, context) {
+      const { user } = context;
+      const file = await args.input;
+      const fileName = file.filename;
+      const mimeType = file.mimetype;
+      const { encoding } = file;
+      const { id, path } = await processUpload(file);
+      const myKey = id;
+      const { myBucket } = amazonConfig;
+      // eslint-disable-next-line consistent-return
+      await fs.readFile(path, (err, data) => {
+        if (err) {
+          return null;
+        }
+        const params = {
+          Bucket: myBucket,
+          Key: myKey,
+          Body: data,
+          ACL: 'public-read-write',
+        };
+        s3.putObject(params, err2 => {
+          if (err2) {
+            return null;
+          }
+          return true;
+        });
+      });
+      const url = `https://s3.us-east-2.amazonaws.com/${myBucket}/${myKey}`;
+      await fs.unlinkSync(path);
+      await user.update({ image: url });
+      return {
+        fileName,
+        mimeType,
+        encoding,
+        url,
+      };
 
     addMoney: async (root, { input }, { orm, user }) => {
       if (!user) return null;
@@ -51,6 +91,7 @@ const resolvers = {
       }
       return userToEdit.money;
     },
+      
     substractMoney: async (root, { input }, { orm, user }) => {
       if (!user) return null;
 
@@ -78,6 +119,13 @@ const typeDef = gql`
     money: Int
   }
 
+  type file {
+    fileName: String!
+    mimeType: String!
+    encoding: String!
+    url: String
+  }
+
   extend type Query {
     users: [User]
     user(id: Int!, name: String, email: String, password: String): User
@@ -102,6 +150,7 @@ const typeDef = gql`
     createUser(input: CreateUserInput!): User!
     editUser(input: UserInput!): User!
     deleteUser(input: UserInput!): User!
+    uploadUserImage(input: Upload!): file!
     addMoney(input: MoneyInput): Int
     substractMoney(input: MoneyInput): Int
   }
