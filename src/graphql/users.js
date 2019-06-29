@@ -44,6 +44,24 @@ const resolvers = {
       if (input.money >= 0) {
         userToEdit.money += input.money;
         userToEdit.save();
+        await orm.moneyTransfer.create({
+          toId: user.id,
+          amount: input.money,
+        });
+      }
+      return userToEdit.money;
+    },
+    substractMoney: async (root, { input }, { orm, user }) => {
+      if (!user) return null;
+
+      const userToEdit = await orm.user.findByPk(user.id);
+      if (input.money >= 0 && input.money < userToEdit.money) {
+        userToEdit.money -= input.money;
+        userToEdit.save();
+        await orm.moneyTransfer.create({
+          fromId: user.id,
+          amount: input.money,
+        });
       }
       return userToEdit.money;
     },
@@ -85,6 +103,7 @@ const typeDef = gql`
     editUser(input: UserInput!): User!
     deleteUser(input: UserInput!): User!
     addMoney(input: MoneyInput): Int
+    substractMoney(input: MoneyInput): Int
   }
 `;
 
