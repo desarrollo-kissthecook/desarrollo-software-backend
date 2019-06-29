@@ -34,7 +34,6 @@ module.exports = (sequelize, DataTypes) => {
   dish.associate = models => {
     dish.belongsTo(models.chef, { through: 'chefId' });
     dish.hasMany(models.reservation, { onDelete: 'cascade' });
-    dish.hasMany(models.dishImage, { onDelete: 'cascade' });
     dish.hasMany(models.dishReview, { onDelete: 'cascade' });
   };
   return dish;
