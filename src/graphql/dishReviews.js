@@ -1,5 +1,4 @@
 const { gql } = require('apollo-server');
-const sendReservationEmail = require('../mailers/reservation');
 
 const resolvers = {
   DishReview: {
