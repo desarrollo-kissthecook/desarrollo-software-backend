@@ -26,7 +26,7 @@ const resolvers = {
     },
 
     editUser: async (root, { input }, { orm, user }) => {
-      const userToEdit = await orm.user.findByPk(input.id);
+      const userToEdit = await orm.user.findByPk(user.id);
       if (!user || !userToEdit || user.id !== userToEdit.id) return null;
       return userToEdit.update(input);
     },
