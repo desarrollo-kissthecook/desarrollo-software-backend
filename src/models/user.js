@@ -25,7 +25,6 @@ module.exports = (sequelize, DataTypes) => {
   user.associate = models => {
     user.hasOne(models.chef, { onDelete: 'cascade' });
     user.hasOne(models.client, { onDelete: 'cascade' });
-    user.hasMany(models.reservation, { onDelete: 'cascade' });
   };
 
   user.prototype.checkPassword = function(password) {
