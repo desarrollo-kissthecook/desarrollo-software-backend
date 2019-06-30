@@ -28,6 +28,13 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
+      locationId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
     },
     {}
   );
@@ -36,6 +43,7 @@ module.exports = (sequelize, DataTypes) => {
     dish.hasMany(models.reservation, { onDelete: 'cascade' });
     dish.hasMany(models.dishImage, { onDelete: 'cascade' });
     dish.hasMany(models.dishReview, { onDelete: 'cascade' });
+    dish.belongsTo(models.location, { through: 'locationId' });
   };
   return dish;
 };

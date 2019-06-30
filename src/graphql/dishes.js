@@ -7,6 +7,7 @@ const resolvers = {
   Dish: {
     chef: (root, args, context) => root.getChef(),
     dishImages: (root, args, context) => root.getDishImages(),
+    location: (root, args, context) => root.getLocation(),
   },
   Query: {
     dishes: (root, args, context) => {
@@ -93,6 +94,7 @@ const typeDef = gql`
     name: String
     price: Int
     dishImages: [DishImage!]
+    location: [Location]
   }
 
   type DishImage {
@@ -109,6 +111,7 @@ const typeDef = gql`
     description: String!
     name: String!
     price: Int!
+    locationId: Int!
   }
   input DishInput {
     id: Int!
