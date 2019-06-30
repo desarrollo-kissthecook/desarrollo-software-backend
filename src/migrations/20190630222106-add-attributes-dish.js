@@ -9,6 +9,14 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true,
       }),
+      queryInterface.addColumn('dishes', 'stock', {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+      }),
+      queryInterface.addColumn('dishes', 'sales', {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+      }),
     ]);
   },
 

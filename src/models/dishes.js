@@ -47,6 +47,18 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
+      stock: {
+        type: DataTypes.INTEGER,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      sales: {
+        type: DataTypes.INTEGER,
+        validate: {
+          notEmpty: true,
+        },
+      },
     },
     {}
   );

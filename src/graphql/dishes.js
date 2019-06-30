@@ -98,6 +98,8 @@ const typeDef = gql`
     price: Int
     beginDate: Date
     endDate: Date
+    stock: Int
+    sales: Int
     dishImages: [DishImage!]
     location: [Location]
     dishReviews: [DishReview!]
@@ -120,6 +122,8 @@ const typeDef = gql`
     locationId: Int!
     beginDate: Date
     endDate: Date
+    stock: Int
+    sales: Int
   }
   input DishInput {
     id: Int!
@@ -129,6 +133,8 @@ const typeDef = gql`
     price: Int
     beginDate: Date
     endDate: Date
+    stock: Int
+    sales: Int
   }
   extend type Mutation {
     createDish(input: CreateDishInput!): Dish!
