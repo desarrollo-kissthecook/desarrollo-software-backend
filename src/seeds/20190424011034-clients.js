@@ -5,7 +5,7 @@ module.exports = {
       [
         {
           userId: 3,
-          name: 'Germinho',
+          name: 'Germán Contreras',
           age: 15,
         },
       ],
