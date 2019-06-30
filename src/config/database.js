@@ -1,7 +1,7 @@
 const config = {
   default: {
     username: process.env.DB_USERNAME,
-    password: 'Candita5.',
+    password: process.env.DB_PASSWORD,
     dialect: 'postgres',
     database: process.env.DB_NAME,
     host: process.env.DB_HOST,
@@ -9,7 +9,7 @@ const config = {
   },
   development: {
     extend: 'default',
-    database: 'dbds2',
+    database: process.env.DB_NAME,
   },
   test: {
     extend: 'default',
