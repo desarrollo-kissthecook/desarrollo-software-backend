@@ -35,6 +35,30 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
+      beginDate: {
+        type: DataTypes.DATE,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      endDate: {
+        type: DataTypes.DATE,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      stock: {
+        type: DataTypes.INTEGER,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      sales: {
+        type: DataTypes.INTEGER,
+        validate: {
+          notEmpty: true,
+        },
+      },
     },
     {}
   );

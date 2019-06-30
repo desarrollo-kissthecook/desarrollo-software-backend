@@ -88,12 +88,18 @@ const resolvers = {
 };
 
 const typeDef = gql`
+  scalar Date
+
   type Dish {
     id: ID!
     chef: Chef!
     description: String
     name: String
     price: Int
+    beginDate: Date
+    endDate: Date
+    stock: Int
+    sales: Int
     dishImages: [DishImage!]
     location: [Location]
     dishReviews: [DishReview!]
@@ -114,6 +120,10 @@ const typeDef = gql`
     name: String!
     price: Int!
     locationId: Int!
+    beginDate: Date
+    endDate: Date
+    stock: Int
+    sales: Int
   }
   input DishInput {
     id: Int!
@@ -121,6 +131,10 @@ const typeDef = gql`
     description: String
     name: String
     price: Int
+    beginDate: Date
+    endDate: Date
+    stock: Int
+    sales: Int
   }
   extend type Mutation {
     createDish(input: CreateDishInput!): Dish!
