@@ -5,13 +5,13 @@ module.exports = {
       [
         {
           userId: 1,
-          description: 'Soy el mejor chef en completos',
-          address: 'Marin 014',
+          description: 'Chef peruano listo para preparar los mejores platos de mi país',
+          address: 'Av. Vicuña Mackenna 4860, Macul, Región Metropolitana',
         },
         {
           userId: 2,
-          description: 'Amante del sushi',
-          address: 'Camino el Alba 9500',
+          description: 'Amante de la cocina colombiana y chilena',
+          address: 'Camino el Alba 9500, Las Condes, Región Metropolitana',
         },
       ],
       {}

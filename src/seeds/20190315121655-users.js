@@ -7,15 +7,15 @@ module.exports = {
       'users',
       [
         {
-          email: 'test@uc.cl',
+          email: 'chef_marco_lopez@gmail.com',
           password,
         },
         {
-          email: 'prueba@uc.cl',
+          email: 'comidas_de_america@gmail.com',
           password,
         },
         {
-          email: 'teste@uc.cl',
+          email: 'german_contreras@me.com',
           password,
         },
       ],
