@@ -67,6 +67,7 @@ const typeDef = gql`
     user: User!
     description: String
     address: String
+    name: String
     dishes: [Dish!]
     ranking: Float
   }
@@ -76,18 +77,21 @@ const typeDef = gql`
   }
   input CreateChefInput {
     userId: ID!
-    description: String!
-    address: String!
+    description: String
+    address: String
+    name: String
   }
   input ChefInput {
     description: String
     address: String
+    name: String
   }
   input CreateChefUserInput {
     email: String!
     password: String!
     description: String!
     address: String!
+    name: String
   }
   extend type Mutation {
     createChef(input: CreateChefInput!): Chef
