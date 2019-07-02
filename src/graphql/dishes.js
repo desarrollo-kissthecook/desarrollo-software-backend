@@ -23,12 +23,18 @@ const resolvers = {
     },
   },
   Mutation: {
-    createDish: async (root, args, context) => {
-      const { user } = context;
+    createDish: async (root, args, { user, orm }) => {
       const { input } = args;
       if (!user) return null;
       const chef = await user.getChef();
-      return chef.createDish(input);
+      const dish = await chef.createDish(input);
+      if (input.tagId) {
+        await orm.dishTag.create({
+          dishId: dish.id,
+          tagId: input.tagId,
+        });
+      }
+      return dish;
     },
 
     editDish: async (root, args, context) => {
@@ -120,7 +126,7 @@ const typeDef = gql`
     stock: Int
     sales: Int
     dishImages: [DishImage!]
-    location: [Location]
+    location: Location
     dishReviews: [DishReview!]
     tags: [Tag]
   }
@@ -140,6 +146,7 @@ const typeDef = gql`
     name: String!
     price: Int!
     locationId: Int!
+    tagId: Int
     beginDate: Date
     endDate: Date
     stock: Int
@@ -153,6 +160,7 @@ const typeDef = gql`
     price: Int
     beginDate: Date
     endDate: Date
+    locationId: Int
     stock: Int
     sales: Int
   }
