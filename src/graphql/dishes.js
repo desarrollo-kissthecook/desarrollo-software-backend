@@ -120,7 +120,7 @@ const typeDef = gql`
     stock: Int
     sales: Int
     dishImages: [DishImage!]
-    location: [Location]
+    location: Location
     dishReviews: [DishReview!]
     tags: [Tag]
   }
