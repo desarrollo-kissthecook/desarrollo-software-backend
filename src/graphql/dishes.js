@@ -27,7 +27,13 @@ const resolvers = {
       const { input } = args;
       if (!user) return null;
       const chef = await user.getChef();
-      return chef.createDish(input);
+      const createdDish = await chef.createDish(input);
+      // eslint-disable-next-line func-names
+      input.images.forEach(function(image) {
+        createdDish.createDishImage({ url: image });
+      });
+
+      return createdDish;
     },
 
     editDish: async (root, args, context) => {
@@ -124,6 +130,7 @@ const typeDef = gql`
     endDate: Date
     stock: Int
     sales: Int
+    images: [String]
   }
   input DishInput {
     id: Int!
