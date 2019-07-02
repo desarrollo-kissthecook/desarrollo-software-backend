@@ -1,9 +1,26 @@
 const { gql } = require('apollo-server');
+const { asyncForEach } = require('../utils');
 
 const resolvers = {
   Chef: {
     user: (root, args, context) => root.getUser(),
     dishes: (root, args, context) => root.getDishes(),
+    ranking: async (root, args, context) => {
+      const dishes = await root.getDishes();
+      const reviews = [];
+      await asyncForEach(dishes, async dish => {
+        reviews.push(await dish.getDishReviews());
+      });
+      let sum = 0;
+      let count = 0;
+      reviews.forEach(reviewsList => {
+        reviewsList.forEach(r => {
+          sum += r.ranking;
+        });
+        count += reviewsList.length;
+      });
+      return sum / count;
+    },
   },
   Query: {
     chefs: (root, args, context) => {
@@ -51,6 +68,7 @@ const typeDef = gql`
     description: String
     address: String
     dishes: [Dish!]
+    ranking: Float
   }
   extend type Query {
     chefs: [Chef]
