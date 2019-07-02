@@ -23,6 +23,9 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
+      name: {
+        type: DataTypes.STRING,
+      },
     },
     {}
   );

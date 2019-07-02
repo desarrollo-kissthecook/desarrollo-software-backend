@@ -9,6 +9,7 @@ const resolvers = {
     dishImages: (root, args, context) => root.getDishImages(),
     location: (root, args, context) => root.getLocation(),
     dishReviews: (root, args, context) => root.getDishReviews(),
+    tags: (root, args, context) => root.getTags(),
   },
   Query: {
     dishes: (root, args, context) => {
@@ -44,7 +45,25 @@ const resolvers = {
       dish.destroy();
       return dish;
     },
-
+    addTagToDish: async (root, { input }, { orm }) => {
+      const dish = await orm.dish.findByPk(input.dishId);
+      const dishTags = await dish.getTags();
+      if (!dishTags.some(tag => tag.id === input.tagId)) {
+        orm.dishTag.create(input);
+      }
+      return dish;
+    },
+    removeTagToDish: async (root, { input }, { orm }) => {
+      const dish = await orm.dish.findByPk(input.dishId);
+      const dishTags = await dish.getTags();
+      if (!dishTags.some(tag => tag.id === input.tagId)) {
+        const dishTag = await orm.dishTag.findOne({
+          where: input,
+        });
+        await dishTag.destroy();
+      }
+      return dish;
+    },
     uploadDishImage: async (root, args, context) => {
       const { user, orm } = context;
       const file = await args.input;
@@ -103,6 +122,7 @@ const typeDef = gql`
     dishImages: [DishImage!]
     location: [Location]
     dishReviews: [DishReview!]
+    tags: [Tag]
   }
 
   type DishImage {
@@ -136,11 +156,17 @@ const typeDef = gql`
     stock: Int
     sales: Int
   }
+  input DishTagInput {
+    dishId: ID!
+    tagId: ID!
+  }
   extend type Mutation {
     createDish(input: CreateDishInput!): Dish!
     editDish(input: DishInput!): Dish!
     deleteDish(input: DishInput!): Dish!
     uploadDishImage(input: Upload!, dishId: Int!): file!
+    addTagToDish(input: DishTagInput): Dish
+    removeTagToDish(input: DishTagInput): Dish
   }
 `;
 
