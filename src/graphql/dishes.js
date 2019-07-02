@@ -9,6 +9,7 @@ const resolvers = {
     dishImages: (root, args, context) => root.getDishImages(),
     location: (root, args, context) => root.getLocation(),
     dishReviews: (root, args, context) => root.getDishReviews(),
+    tags: (root, args, context) => root.getTags(),
   },
   Query: {
     dishes: (root, args, context) => {
@@ -22,18 +23,26 @@ const resolvers = {
     },
   },
   Mutation: {
-    createDish: async (root, args, context) => {
-      const { user } = context;
+    createDish: async (root, args, { user, orm }) => {
       const { input } = args;
       if (!user) return null;
       const chef = await user.getChef();
-      const createdDish = await chef.createDish(input);
+      const dish = await chef.createDish(input);
       // eslint-disable-next-line func-names
-      input.images.forEach(function(image) {
-        createdDish.createDishImage({ url: image });
-      });
+      if (input.images) {
+        // eslint-disable-next-line func-names
+        input.images.forEach(function(image) {
+          dish.createDishImage({ url: image });
+        });
+      }
 
-      return createdDish;
+      if (input.tagId) {
+        await orm.dishTag.create({
+          dishId: dish.id,
+          tagId: input.tagId,
+        });
+      }
+      return dish;
     },
 
     editDish: async (root, args, context) => {
@@ -50,7 +59,25 @@ const resolvers = {
       dish.destroy();
       return dish;
     },
-
+    addTagToDish: async (root, { input }, { orm }) => {
+      const dish = await orm.dish.findByPk(input.dishId);
+      const dishTags = await dish.getTags();
+      if (!dishTags.some(tag => tag.id === input.tagId)) {
+        orm.dishTag.create(input);
+      }
+      return dish;
+    },
+    removeTagToDish: async (root, { input }, { orm }) => {
+      const dish = await orm.dish.findByPk(input.dishId);
+      const dishTags = await dish.getTags();
+      if (!dishTags.some(tag => tag.id === input.tagId)) {
+        const dishTag = await orm.dishTag.findOne({
+          where: input,
+        });
+        await dishTag.destroy();
+      }
+      return dish;
+    },
     uploadDishImage: async (root, args, context) => {
       const { user, orm } = context;
       const file = await args.input;
@@ -107,8 +134,9 @@ const typeDef = gql`
     stock: Int
     sales: Int
     dishImages: [DishImage!]
-    location: [Location]
+    location: Location
     dishReviews: [DishReview!]
+    tags: [Tag]
   }
 
   type DishImage {
@@ -126,6 +154,7 @@ const typeDef = gql`
     name: String!
     price: Int!
     locationId: Int!
+    tagId: Int
     beginDate: Date
     endDate: Date
     stock: Int
@@ -140,14 +169,21 @@ const typeDef = gql`
     price: Int
     beginDate: Date
     endDate: Date
+    locationId: Int
     stock: Int
     sales: Int
+  }
+  input DishTagInput {
+    dishId: ID!
+    tagId: ID!
   }
   extend type Mutation {
     createDish(input: CreateDishInput!): Dish!
     editDish(input: DishInput!): Dish!
     deleteDish(input: DishInput!): Dish!
     uploadDishImage(input: Upload!, dishId: Int!): file!
+    addTagToDish(input: DishTagInput): Dish
+    removeTagToDish(input: DishTagInput): Dish
   }
 `;
 

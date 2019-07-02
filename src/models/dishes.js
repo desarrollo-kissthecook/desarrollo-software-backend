@@ -68,6 +68,8 @@ module.exports = (sequelize, DataTypes) => {
     dish.hasMany(models.dishImage, { onDelete: 'cascade' });
     dish.hasMany(models.dishReview, { onDelete: 'cascade' });
     dish.belongsTo(models.location, { through: 'locationId' });
+    dish.hasMany(models.dishTag, { onDelete: 'cascade' });
+    dish.belongsToMany(models.tag, { through: 'dishTag' });
   };
   return dish;
 };
