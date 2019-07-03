@@ -28,6 +28,14 @@ const resolvers = {
       if (!user) return null;
       const chef = await user.getChef();
       const dish = await chef.createDish(input);
+      // eslint-disable-next-line func-names
+      if (input.images) {
+        // eslint-disable-next-line func-names
+        input.images.forEach(function(image) {
+          dish.createDishImage({ url: image });
+        });
+      }
+
       if (input.tagId) {
         await orm.dishTag.create({
           dishId: dish.id,
@@ -151,6 +159,7 @@ const typeDef = gql`
     endDate: Date
     stock: Int
     sales: Int
+    images: [String]
   }
   input DishInput {
     id: Int!
