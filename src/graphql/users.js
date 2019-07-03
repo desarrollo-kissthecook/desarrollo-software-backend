@@ -2,6 +2,8 @@ const fs = require('fs');
 const { gql } = require('apollo-server');
 const { processUpload, s3 } = require('../services/fileUpload');
 const amazonConfig = require('../config/amazon');
+const sendAddMoneyEmail = require('../mailers/addMoneyChef');
+const sendSubstractMoneyEmail = require('../mailers/substractMoneyChef');
 
 const resolvers = {
   User: {
@@ -78,9 +80,8 @@ const resolvers = {
       };
     },
 
-    addMoney: async (root, { input }, { orm, user }) => {
+    addMoney: async (root, { input }, { orm, user, ctx }) => {
       if (!user) return null;
-
       const userToEdit = await orm.user.findByPk(user.id);
       if (input.money >= 0) {
         userToEdit.money += input.money;
@@ -89,13 +90,17 @@ const resolvers = {
           toId: user.id,
           amount: input.money,
         });
+        sendAddMoneyEmail(ctx, {
+          user,
+          money: input.money,
+          total: userToEdit.money,
+        });
       }
       return userToEdit.money;
     },
 
-    substractMoney: async (root, { input }, { orm, user }) => {
+    substractMoney: async (root, { input }, { orm, user, ctx }) => {
       if (!user) return null;
-
       const userToEdit = await orm.user.findByPk(user.id);
       if (input.money >= 0 && input.money < userToEdit.money) {
         userToEdit.money -= input.money;
@@ -103,6 +108,11 @@ const resolvers = {
         await orm.moneyTransfer.create({
           fromId: user.id,
           amount: input.money,
+        });
+        sendSubstractMoneyEmail(ctx, {
+          user,
+          money: input.money,
+          total: userToEdit.money,
         });
       }
       return userToEdit.money;
