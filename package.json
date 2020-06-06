@@ -30,7 +30,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "apollo-server": "^2.4.8",
-    "apollo-server-koa": "^2.4.8",
+    "apollo-server-koa": "^2.14.2",
     "aws-sdk": "^2.485.0",
     "bcrypt": "^3.0.6",
     "faker": "^4.1.0",
